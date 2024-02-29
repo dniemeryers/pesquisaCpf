@@ -9,7 +9,9 @@ background-color: #e0e0e0;
 width:100%;
 
 .centralizar{
-   width:70%;
+    display:flex;
+   width:80%;
+   height:350px;
    margin:auto;
 }
 

@@ -108,6 +108,7 @@ export function Home() {
 
   return (
     <Container>
+        {/*
      <div className='centralizar'>  
       <div >
         <div></div>
@@ -177,7 +178,7 @@ export function Home() {
           {nomeDaMaeChecked && (
             <div>
               <p>Nome da mãe confirmado automaticamente!</p>
-              {/* Adicione outras informações ou ações desejadas aqui */}
+            
             </div>
           )}
 
@@ -186,7 +187,12 @@ export function Home() {
           )}
         </>
       )}
-      </div> 
+      </div> */}
+
+      <iframe className='centralizar'
+  src="https://typebot.co/my-typebot-mtljo5f"></iframe>
+
+
     </Container>
   );
 }
