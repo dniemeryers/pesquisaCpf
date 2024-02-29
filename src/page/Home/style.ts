@@ -9,7 +9,7 @@ background-color: #e0e0e0;
 width:100%;
 
 .centralizar{
-   width:80%;
+   width:70%;
    margin:auto;
 }
 
@@ -55,13 +55,7 @@ width:100%;
 
 .chatClientNomeMae{
     
-    display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 10px; /* Adjust the gap between grid items */
-            height: 100vh; /* Adjust the height of the grid c
-   
-   
+      
     background-color:#455a64;
     border-radius:30px 30px 0px 30px;
     padding:2px 5px 2px 10px;
@@ -142,6 +136,3 @@ input{
 
 
 `
-
-
-
