@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container } from './style';
-
-// Importações de componentes e imagens...
+import Loading from '../../assets/img/loading.gif';
 
 const nomesFemininos = ["Ana", "Beatriz", "Carla", "Daniela", "Evelyn", "Fernanda", "Gabriela", "Helena", "Isabela", "Juliana"];
 
@@ -19,13 +18,59 @@ export function Home() {
 
   const primeiroNome = gerarNomeAleatorio();
   const segundoNome = gerarNomeAleatorio();
+  const terceiroNome = gerarNomeAleatorio();
 
   const [primeiroNomeChecked, setPrimeiroNomeChecked] = useState(false);
-  const [segundoNomeChecked, setSegundoNomeChecked] = useState(false);
   const [nomeDaMaeChecked, setNomeDaMaeChecked] = useState(false);
+  const [segundoNomeChecked, setSegundoNomeChecked] = useState(false);
+  const [terceiraNomeChecked, setTerceiroNomeChecked] = useState(false);
+
+  const [requisicaoFeita, setRequisicaoFeita] = useState(false);
+
+  const [exibirImagem, setExibirImagem] = useState(true);
+  const [exibirImagem2, setExibirImagem2] = useState(true);
+  const [exibirImagem3, setExibirImagem3] = useState(true);
+  const [exibirImagem4, setExibirImagem4] = useState(true);
   const [nomeDaMaeConfirmado, setNomeDaMaeConfirmado] = useState(false);
 
+  useEffect(() => {
+    const timer1 = setTimeout(() => {
+      setExibirImagem(false);
+    }, 5000);
+
+    return () => clearTimeout(timer1);
+  }, []);
+
+  useEffect(() => {
+    const timer2 = setTimeout(() => {
+      setExibirImagem2(false);
+    }, 10000);
+
+    return () => clearTimeout(timer2);
+  }, []);
+
+  useEffect(() => {
+    if (requisicaoFeita) {
+      const timer3 = setTimeout(() => {
+        setExibirImagem3(false);
+      }, 5000);
+
+      const timer4 = setTimeout(() => {
+        setExibirImagem4(false);
+      }, 10000);
+
+      return () => {
+        clearTimeout(timer3);
+        clearTimeout(timer4);
+      };
+    }
+  }, [requisicaoFeita]);
+
+
+
+
   const fetchData = async () => {
+    setRequisicaoFeita(true);
     try {
       const response = await fetch(`https://api.cpfcnpj.com.br/${token}/${pacote}/${cpf}`, {
         method: 'GET',
@@ -33,13 +78,6 @@ export function Home() {
           'Content-Type': 'application/json',
         },
       });
-
-      const nomeAleatorio = gerarNomeAleatorio();
-
-      const result = {
-        nome: nomeAleatorio,
-        mae: "Nome da Mãe Exemplo"
-      };
 
       if (response.ok) {
         const data = await response.json();
@@ -71,46 +109,93 @@ export function Home() {
     setNomeDaMaeConfirmado(true);
   };
 
+
+
+
   return (
     <Container>
-      <div className='bio'>
-        <input
-          type="text"
-          placeholder="CPF"
-          value={cpf}
-          onChange={(e) => setCPF(e.target.value)}
-        />
-        <button onClick={fetchData}>Consultar</button>
-
-        {error && (
-          <div>
-            <p>Erro:</p>
-            <p>{error}</p>
-          </div>
-        )}
-
-        {result && (
-          <div>
-            <p>Olá {result.nome}</p>
-            <p>Confirme o nome de sua mãe:</p>
-            <div>
-              <button onClick={() => setPrimeiroNomeChecked(!primeiroNomeChecked)}>{primeiroNome}</button>
-              <button onClick={() => setNomeDaMaeChecked(!nomeDaMaeChecked)}>{result.mae}</button>
-              <button onClick={() => setSegundoNomeChecked(!segundoNomeChecked)}>{segundoNome}</button>
+        <div className='centralizar'>
+      <div >
+        <div></div>
+        {exibirImagem && <div className='loadChat'><img src={Loading} width="50px" alt="loading" /></div>}
+        {!exibirImagem && (
+          <>
+            <div className='chat'>
+              <h1>Bem-vindo ao esboço de consulta CPF</h1>
             </div>
-
-            {nomeDaMaeChecked && (
-              <div>
-                <p>Nome da mãe confirmado automaticamente!</p>
-                {/* Adicione outras informações ou ações desejadas aqui */}
+            {exibirImagem2 && <div className='loadClient'><img src={Loading} width="50px" alt="loading" /></div>}
+            {!exibirImagem2 && (
+              <div className='chatClient'>
+                {exibirImagem && <img src={Loading} width="50px" alt="loading" />}
+                {!exibirImagem && (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="CPF"
+                      value={cpf}
+                      onChange={(e) => setCPF(e.target.value)}
+                    />
+                    <button className='enviar' onClick={fetchData}>Enviar</button>
+                  </>
+                )}
               </div>
             )}
 
-            {nomeDaMaeConfirmado && (
-              <p>Nome da mãe confirmado!</p>
+            {error && (
+              <div>
+                <p>Erro:</p>
+                <p>{error}</p>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {result && (
+        <>
+          <div className='body'>
+            <div className='chat'>
+              {exibirImagem3 && <img src={Loading} width="50px" alt="loading" />}{!exibirImagem3 && (
+                <p>Olá {result.nome} tudo bem? Confirme o nome de sua mãe:</p>
+              )}
+            </div>
+          </div>
+
+    {exibirImagem3 && <div></div> }{!exibirImagem3 && (          
+          <div>
+            {exibirImagem4 && <div className='loadClient'><img src={Loading} width="50px" alt="loading" /></div>}
+            {!exibirImagem4 && (
+                
+              <div className='chatClientNomeMae'>
+                <button className='buttonNomeMae' onClick={() => setPrimeiroNomeChecked(!primeiroNomeChecked)}>
+                  {primeiroNome}
+                </button>
+                <button className='buttonNomeMae' onClick={() => setNomeDaMaeChecked(!nomeDaMaeChecked)}>
+                  {result.mae}
+                </button>
+                <button className='buttonNomeMae' onClick={() => setSegundoNomeChecked(!segundoNomeChecked)}>
+                  {segundoNome}
+                </button>
+                <button className='buttonNomeMae' onClick={() => setSegundoNomeChecked(!terceiraNomeChecked)}>
+                  {terceiroNome}
+                </button>
+              </div>
             )}
           </div>
         )}
+
+          {nomeDaMaeChecked && (
+            <div>
+              <p>Nome da mãe confirmado automaticamente!</p>
+              {/* Adicione outras informações ou ações desejadas aqui */}
+            </div>
+          )}
+
+          {nomeDaMaeConfirmado && (
+            <p>Nome da mãe confirmado!</p>
+          )}
+        </>
+      )}
       </div>
     </Container>
   );
